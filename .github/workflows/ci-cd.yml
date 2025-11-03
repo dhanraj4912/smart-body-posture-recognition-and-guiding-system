@@ -44,8 +44,8 @@ jobs:
         working-directory: ml-server
         run: pytest --maxfail=1 --disable-warnings -q || echo "No tests found"
 
-      - name: Deploy to Render
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "Triggering Render deployment..."
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+      # - name: Deploy to Render
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     echo "Triggering Render deployment..."
+      #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
