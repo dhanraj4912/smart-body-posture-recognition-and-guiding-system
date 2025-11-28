@@ -10,3 +10,4 @@ ultralytics
 joblib
 python-dotenv
 requests
+gunicorn
