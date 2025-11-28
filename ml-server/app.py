@@ -368,14 +368,7 @@ class SimpleTracker:
 
 trackers: Dict[str, SimpleTracker] = {sid: SimpleTracker() for sid in STREAMS}
 
-def log_event(stream_id, pid, user_id, label, severity, confidence, suggestions):
-    try:
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
-        c.execute("INSERT INTO posture_events(ts, stream_id, person_id, user_id, label, severity, confidence, suggestions) VALUES (?,?,?,?,?,?,?,?)",
-                  (int(time.time()), stream_id, int(pid), user_id or '', label, severity, float(confidence), "; ".join(suggestions)))
-        conn.commit(); conn.close()
-    except Exception:
-        pass
+
 
 
 def open_capture(src):
@@ -472,10 +465,7 @@ def generate_frames(stream_id):
                                     'box': [x1, y1, x2, y2]
                                 }
                                 socketio.emit('posture_alert', payload)
-                                user_rec = user_map.get(pid)
-                                if user_rec and user_rec.get('socket_id'):
-                                    socketio.emit('posture_alert', payload, to=user_rec['socket_id'])
-                                log_event(stream_id, pid, user_id, label_text, severity, confidence, suggestions)
+                               
 
                     label_display = f"{label_text} ({severity}, conf {confidence})"
                     color = (0, 0, 255) if severity != 'good' else (0, 200, 0)
@@ -696,25 +686,7 @@ def recommendation():
         
         return jsonify({'recommendations': recommendations, 'message': f'Found {len(recommendations)} person(s) in frame'})
 
-@app.route('/analytics')
-def analytics():
-    day = time.strftime("%Y-%m-%d")
-    conn = sqlite3.connect(DB_PATH); c = conn.cursor()
-    start = int(time.mktime(time.strptime(day, "%Y-%m-%d"))); end = start + 86400
-    c.execute("SELECT confidence, severity FROM posture_events WHERE ts BETWEEN ? AND ?", (start, end))
-    rows = c.fetchall(); conn.close()
-    if not rows: return jsonify({'day': day, 'avg_confidence': None, 'bad_ratio': None, 'notes': 'No data today'})
-    avg_conf = sum(r[0] for r in rows) / len(rows)
-    bad_ratio = sum(1 for _, s in rows if s != 'good') / len(rows)
-    return jsonify({'day': day, 'avg_confidence': round(avg_conf,2), 'bad_ratio': round(bad_ratio,2)})
 
-@app.route('/manager/overview')
-def manager_overview():
-    conn = sqlite3.connect(DB_PATH); c = conn.cursor()
-    c.execute("SELECT ts, stream_id, person_id, user_id, label, severity, confidence FROM posture_events ORDER BY ts DESC LIMIT 50")
-    rows = c.fetchall(); conn.close()
-    events = [{'ts': r[0], 'stream_id': r[1], 'person_id': r[2], 'user_id': r[3], 'label': r[4], 'severity': r[5], 'confidence': r[6]} for r in rows]
-    return jsonify({'events': events})
 
 @app.route('/chat', methods=['POST'])
 def chat():
