@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { account } from "../appwrite";
+import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -15,18 +15,16 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      try {
-        const currentSession = await account.getSession("current");
-        if (currentSession) {
-          await account.deleteSession("current");
-          console.log("Old session cleared.");
-        }
-      } catch {
-      }
-      await account.createEmailPasswordSession(form.email, form.password);
-      alert("Login successful!");
 
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (error) throw error;
+
+      alert("Login successful!");
       localStorage.setItem("isLoggedIn", "true");
       navigate("/dashboard");
     } catch (error) {

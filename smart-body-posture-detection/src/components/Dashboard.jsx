@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
+import { supabase } from "../../supabase";
 
 
 function Dashboard() {
@@ -19,9 +20,12 @@ function Dashboard() {
   const [userId] = useState(localStorage.getItem("userId") || "user001");
   const [recommendations, setRecommendations] = useState([]);
 
+  
   useEffect(() => {
-    if (localStorage.getItem("isLoggedIn") !== "true") navigate("/login");
-  }, [navigate]);
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) navigate("/login");
+    });
+  }, []);
 
   useEffect(() => {
     const s = io("http://localhost:5000");

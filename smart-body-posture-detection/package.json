@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.86.0",
     "@tailwindcss/vite": "^4.1.16",
     "appwrite": "^21.3.0",
     "firebase": "^12.5.0",

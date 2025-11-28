@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { account } from "../appwrite";
+import { supabase } from "../../supabase";
 import { useNavigate } from "react-router-dom";
-import { ID } from "appwrite";
 
 function Register() {
   const [form, setForm] = useState({
@@ -28,12 +27,21 @@ function Register() {
 
     setLoading(true);
     try {
-      // Create a new Appwrite account
-      await account.create(ID.unique(), form.email, form.password, form.name);
-      alert("Account created successfully! Please log in.");
+      // Register user
+      const { data, error } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+        options: {
+          data: { full_name: form.name },
+        },
+      });
+
+      if (error) throw error;
+
+      alert("Account created successfully! Check email to verify, then login.");
       navigate("/login");
     } catch (error) {
-      alert("Error: " + error.message);
+      alert(error.message);
     } finally {
       setLoading(false);
     }
