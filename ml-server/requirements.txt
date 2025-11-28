@@ -3,10 +3,10 @@ flask-cors
 flask-socketio
 eventlet
 opencv-python-headless
-numpy==1.26.4
+numpy
 tensorflow-cpu==2.20.0
 tensorflow-hub
-ultralytics
+ultralytics==8.0.196
 joblib
 python-dotenv
 requests

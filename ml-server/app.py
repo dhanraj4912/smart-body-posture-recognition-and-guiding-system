@@ -21,7 +21,6 @@ import smtplib
 from email.mime.text import MIMEText
 from flask_cors import CORS
 
-# Local NLP for chatbot
 try:
     from transformers import pipeline
     nlp_initialized = True
@@ -68,7 +67,6 @@ posture_model = None
 if os.path.exists('models/posture_classifier.pkl'):
     posture_model = joblib.load('models/posture_classifier.pkl')
 
-# -------- DB --------
 
 
 # -------- State --------
@@ -131,22 +129,15 @@ def compute_posture_features(kpts):
     if torso_height < 0.01:
         torso_height = 0.1
 
-    # --- Feature Calculations ---
-
-    # 1. Torso Angle (Slouch Detection)
-    # Measures the angle of the spine from vertical
     mid_sh = mid(left_sh, right_sh)
     mid_hip = mid(left_hip, right_hip)
     dx = mid_hip[1] - mid_sh[1]  # Delta X (horizontal)
-    dy = mid_hip[0] - mid_sh[0]  # Delta Y (vertical)
-    
-    # Angle from vertical (0 = perfectly vertical, 90 = horizontal)
+    dy = mid_hip[0] - mid_sh[0]  
+
     torso_angle = abs(degrees(atan2(dx, dy)))
     if torso_angle > 90:
         torso_angle = 180 - torso_angle
 
-    # 2. Forward Head Ratio (Head Position relative to shoulders)
-    # Measures how far forward the head is
     head_x = nose[1]
     mid_sh_x = (left_sh[1] + right_sh[1]) / 2.0
     forward_head_ratio = abs(head_x - mid_sh_x) / shoulder_width if shoulder_width > 0 else 0
