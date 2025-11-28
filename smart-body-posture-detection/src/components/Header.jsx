@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <nav className="bg-gray-900 text-white flex justify-between items-center px-12 h-20 fixed w-full top-0 z-50">
+    <nav className="bg-gray-950 text-white flex justify-between items-center px-12 h-20 fixed w-full top-0 z-50">
       <div className="text-2xl font-bold flex items-center gap-2">
         <FaRunning />
         <span>
@@ -23,7 +23,7 @@ function Header() {
           <a href="#how">How it Works</a>
         </li>
         <li className="ml-4 text-2xl">
-          <Link to="/login">Signin</Link>
+          <Link to="/login">Sign in</Link>
         </li>
         <li className="ml-4 text-2xl">
           <Link to="/register">Register</Link>

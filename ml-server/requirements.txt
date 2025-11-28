@@ -1,7 +1,16 @@
 flask
+flask-cors
+flask-socketio
 opencv-python
 numpy
 tensorflow
+tensorflow-hub
 mediapipe
 pillow
 gunicorn
+ultralytics
+joblib
+requests
+python-dotenv
+transformers
+torch

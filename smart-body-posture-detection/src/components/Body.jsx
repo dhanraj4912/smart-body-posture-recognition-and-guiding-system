@@ -1,10 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Body() {
+  const navigate = useNavigate()
   return (
     <>
       {/* Hero Section */}
-      <section id="home" className="min-h-screen flex flex-col items-center justify-center text-center px-4 relative">
+      <section id="home" className="  bg-gray-900 text-white   min-h-screen flex flex-col items-center justify-center text-center px-4 relative">
         <h1 className="text-5xl font-bold mb-4">
           Correct Your Posture,{" "}
           <span className="text-yellow-400">Stay Healthy</span>
@@ -12,11 +14,11 @@ function Body() {
         <p className="text-gray-200 max-w-2xl mb-8">
           Real-time posture detection and guidance for students and professionals.
         </p>
-        <button className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-semibold text-lg hover:bg-yellow-400 transition">Check Your Posture</button>
+        <button onClick={() => navigate('/login')} className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-semibold text-lg hover:bg-yellow-400 transition">Check Your Posture</button>
       </section>
 
       {/* Featured Features Section */}
-      <section id="features" className="py-16 px-6 text-center">
+      <section id="features" className="  bg-gray-900 text-white  py-16 px-6 text-center">
         <h2 className="text-3xl font-semibold mb-10">🌟 Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 justify-items-center">
           <div className="card rounded-xl p-4 shadow-lg max-w-sm">
