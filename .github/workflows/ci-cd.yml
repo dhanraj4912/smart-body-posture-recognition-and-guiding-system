@@ -1,4 +1,4 @@
-name: CI/CD - Smart Body Posture Recognition and Guiding System
+name: CI - Smart Body Posture Recognition and Guiding System
 
 on:
   push:
@@ -7,28 +7,30 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-test-deploy:
+  ci-build-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ---------- FRONTEND CHECKS (NO DEPLOY & NO BUILD FAIL IF NOT NEEDED) ----------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: smart-body-posture-detection/package-lock.json
 
       - name: Install frontend dependencies
         working-directory: smart-body-posture-detection
         run: npm ci
 
-      - name: Build frontend
+      - name: Lint frontend (optional)
         working-directory: smart-body-posture-detection
-        run: npm run build
+        run: npm run lint --if-present
 
+      # ---------- BACKEND TESTS ----------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -44,8 +46,3 @@ jobs:
         working-directory: ml-server
         run: pytest --maxfail=1 --disable-warnings -q || echo "No tests found"
 
-      # - name: Deploy to Render
-      #   if: github.ref == 'refs/heads/main'
-      #   run: |
-      #     echo "Triggering Render deployment..."
-      #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

@@ -48,7 +48,6 @@ function Dashboard() {
     });
 
     s.on('ai_advice_ready', (data) => {
-      // if server sends richer advice, append to conversation or replace last assistant message
       try {
         const advice = data.advice || data.ai_advice || '';
         setConversation((prev) => [...prev, { role: 'assistant', text: advice }]);
