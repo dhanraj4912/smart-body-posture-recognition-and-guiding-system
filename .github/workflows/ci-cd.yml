@@ -20,7 +20,8 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: smart-body-posture-detection/package-lock.json
+          cache-dependency-path: |
+            **/package-lock.json
 
       - name: Install frontend dependencies
         working-directory: smart-body-posture-detection
